@@ -1,0 +1,2 @@
+script: sleep 30 && exit 0
+sudo: required
