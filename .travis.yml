@@ -1,0 +1,3 @@
+script:
+  - test "The build was successfully restarted." = "$(./travis-cron neoascetic/travis-cron travis-test-branch)"
+  - test "This build currently can not be restarted." = "$(./travis-cron neoascetic/travis-cron travis-test-branch)"

@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if [[ -z "$1" || -z "$TRAVIS_TOKEN" ]]; then
+  echo "Usage: $0 username/repo [branch]. Global TRAVIS_TOKEN variable must be set."
+  exit 1
+fi
+
+[[ "$2" ]] && branch="$2" || branch="master"
+
+base='https://api.travis-ci.org'
+accept_header='Accept: application/vnd.travis-ci.2+json'
+# token may be found with
+# curl "$base/auth/github" -d 'github_token=$GITHUB_TOKEN' -H "$accept_header"
+auth_header="Authorization: token \"$TRAVIS_TOKEN\""
+
+last_build_id=$(curl "$base/repos/$1/builds" -H "$auth_header" 2> /dev/null | grep -om1 "{[^{}]*\"branch\":\s*\"$branch\"[^{}}]*}" | head -n1 | grep -o '"id":\s*[0-9]\+' | grep -o '[0-9]\+')
+echo $(curl "$base/requests" -H "$auth_header" -H "$accept_header" -d "build_id=$last_build_id" 2> /dev/null | grep -o '"\(notice\|error\)":\s*".*"' | awk -F\" '{print $4}')
