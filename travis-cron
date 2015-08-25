@@ -14,4 +14,4 @@ accept_header='Accept: application/vnd.travis-ci.2+json'
 auth_header="Authorization: token \"$TRAVIS_TOKEN\""
 
 last_build_id=$(curl "$base/repos/$1/builds" -H "$auth_header" 2> /dev/null | grep -om1 "{[^{}]*\"branch\":\s*\"$branch\"[^{}]*}" | head -n1 | grep -o '"id":\s*[0-9]\+' | grep -o '[0-9]\+')
-echo $(curl "$base/requests" -H "$auth_header" -H "$accept_header" -d "build_id=$last_build_id" 2> /dev/null | grep -o '"error":\s*".*"' | cut -d\" -f4)
+echo $(curl -X POST "$base/builds/$last_build_id/restart" -H "$auth_header" -H "$accept_header" 2> /dev/null | grep -o '"error":\s*".*"' | cut -d\" -f4)
