@@ -1,5 +1,5 @@
 sudo: false
 script:
   - test -z "$(./travis-cron neoascetic/travis-cron travis-test-branch)"
-  - sleep 5
+  - sleep 10
   - test "This build currently can not be restarted." = "$(./travis-cron neoascetic/travis-cron travis-test-branch)"
